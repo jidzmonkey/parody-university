@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>parody-school.com – Canvas-style Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --global-nav-bg: #261816;
+      --global-nav-active: #c00404;
+      --course-nav-bg: #f5f5f5;
+      --course-nav-border: #d1d5db;
+      --content-bg: #ffffff;
+      --page-bg: #f3f4f6;
+      --primary-text: #1f2933;
+      --muted-text: #6b7280;
+      --link: #007ab8;
+      --border: #d1d5db;
+      --accent: #c00404;
+      --radius: 4px;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--page-bg);
+      color: var(--primary-text);
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* GLOBAL LAYOUT – CANVAS-LIKE */
+
+    .ic-app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .global-nav {
+      width: 80px;
+      background: var(--global-nav-bg);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 12px;
+    }
+
+    .global-nav-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--global-nav-bg);
+    }
+
+    .global-nav-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .global-nav-item {
+      width: 100%;
+      text-align: center;
+      margin: 6px 0;
+    }
+
+    .global-nav-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 0;
+      color: #e5e7eb;
+      font-size: 0.7rem;
+    }
+
+    .global-nav-link-active {
+      border-left: 3px solid var(--global-nav-active);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .global-nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f9fafb;
+    }
+
+    .global-nav-icon svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      fill: currentColor;
+    }
+
+    .global-nav-link-active .global-nav-icon {
+      background: rgba(0, 0, 0, 0.28);
+      color: var(--global-nav-active);
+    }
+
+    .ic-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* LOGIN VIEW (CENTERED PANEL) */
+
+    #login-screen {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+      border: 1px solid var(--border);
+      padding: 24px 26px 20px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .login-header h1 {
+      font-size: 1.2rem;
+      margin: 4px 0 0;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .login-subtitle {
+      font-size: 0.82rem;
+      color: var(--muted-text);
+      margin-top: 2px;
+    }
+
+    .login-header .logo-frame {
+      margin: 4px auto 2px;
+      width: 54px;
+      height: 54px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #374151;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .badge span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="url"] {
+      width: 100%;
+      padding: 8px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      outline: none;
+      background: #f9fafb;
+      transition: border-color 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+    }
+
+    input:focus {
+      border-color: var(--link);
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.18);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 7px 13px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: background 0.1s ease, box-shadow 0.1s ease, transform 0.06s ease;
+    }
+
+    .btn-primary {
+      background: #0085c2;
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #0072a6;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted-text);
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-ghost:hover {
+      background: #f3f4f6;
+    }
+
+    .login-footer {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      color: var(--muted-text);
+    }
+
+    /* DASHBOARD CANVAS-LIKE LAYOUT */
+
+    #dashboard {
+      flex: 1;
+      padding: 0;
+    }
+
+    .canvas-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .canvas-top-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .breadcrumbs {
+      font-size: 0.78rem;
+      color: var(--muted-text);
+    }
+
+    .breadcrumbs span.sep {
+      margin: 0 4px;
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.78rem;
+    }
+
+    .student-id {
+      font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: var(--muted-text);
+    }
+
+    .status-pill {
+      padding: 1px 8px;
+      border-radius: 999px;
+      border: 1px solid #bbf7d0;
+      background: #ecfdf3;
+      color: #15803d;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .canvas-columns {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr) 260px;
+      min-height: calc(100vh - 40px);
+    }
+
+    /* COURSE NAV (LEFT COLUMN) */
+
+    .course-nav {
+      background: var(--course-nav-bg);
+      border-right: 1px solid var(--course-nav-border);
+      padding: 10px 0 16px;
+      font-size: 0.86rem;
+    }
+
+    .course-nav-term {
+      padding: 0 16px 6px;
+      font-size: 0.75rem;
+      color: var(--muted-text);
+    }
+
+    .course-nav-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .course-nav-item a {
+      display: block;
+      padding: 7px 16px;
+      color: #374151;
+      border-left: 3px solid transparent;
+    }
+
+    .course-nav-item a:hover {
+      background: #e5e7eb;
+      text-decoration: none;
+    }
+
+    .course-nav-item.active a {
+      font-weight: 600;
+      border-left-color: var(--accent);
+      background: #ffffff;
+    }
+
+    /* MAIN CONTENT */
+
+    .course-main {
+      padding: 16px 18px 20px;
+    }
+
+    .course-header {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-frame {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .logo-frame span {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--global-nav-bg);
+    }
+
+    .logo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .school-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .school-name-display {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .school-subtitle {
+      font-size: 0.82rem;
+      color: var(--muted-text);
+      margin-top: 2px;
+    }
+
+    .page-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .page-title-row h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .page-title-sub {
+      font-size: 0.8rem;
+      color: var(--muted-text);
+      margin-top: 2px;
+    }
+
+    .page-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+    }
+
+    .page-actions .btn-ghost {
+      padding: 4px 8px;
+      font-size: 0.78rem;
+    }
+
+    .panel {
+      background: var(--content-bg);
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      padding: 10px 12px 10px;
+      margin-bottom: 14px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .panel-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #4b5563;
+    }
+
+    .panel-note {
+      font-size: 0.75rem;
+      color: var(--muted-text);
+    }
+
+    .courses-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
+
+    .courses-table th,
+    .courses-table td {
+      border: 1px solid #e5e7eb;
+      padding: 4px 6px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .courses-table th {
+      background: #f9fafb;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: #4b5563;
+    }
+
+    .courses-table tfoot td {
+      font-weight: 600;
+      background: #f3f4f6;
+    }
+
+    .course-form {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 8px;
+      align-items: center;
+    }
+
+    .course-form input {
+      font-size: 0.78rem;
+      padding: 6px 7px;
+    }
+
+    .course-form .btn {
+      grid-column: span 4;
+      justify-self: flex-end;
+    }
+
+    .error {
+      color: #b91c1c;
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+
+    .inline-input {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .inline-input input[type="text"],
+    .inline-input input[type="url"] {
+      max-width: 260px;
+      padding: 6px 7px;
+      font-size: 0.82rem;
+    }
+
+    .info-list {
+      list-style: none;
+      margin: 6px 0 0;
+      padding: 0;
+      font-size: 0.8rem;
+      color: var(--muted-text);
+    }
+
+    .info-list li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .info-label {
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .small-heading {
+      margin-top: 8px;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      color: var(--muted-text);
+      font-weight: 600;
+    }
+
+    .dates-list,
+    .links-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      font-size: 0.8rem;
+      color: #374151;
+    }
+
+    .dates-list li,
+    .links-list li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .link-faint {
+      color: var(--link);
+      font-size: 0.8rem;
+    }
+
+    .link-faint:hover {
+      text-decoration: underline;
+    }
+
+    /* RIGHT SIDEBAR */
+
+    .right-sidebar {
+      padding: 16px 14px 20px;
+      border-left: 1px solid var(--course-nav-border);
+      background: #f9fafb;
+      font-size: 0.82rem;
+    }
+
+    .sidebar-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-btn i {
+      margin-right: 6px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      color: var(--muted-text);
+      margin: 10px 0 4px;
+      font-weight: 600;
+    }
+
+    .save-status {
+      font-size: 0.76rem;
+      color: var(--muted-text);
+      margin-top: 4px;
+    }
+
+    /* Toggle */
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: var(--muted-text);
+      user-select: none;
+    }
+
+    .toggle input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toggle-switch {
+      width: 32px;
+      height: 18px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.15s ease;
+    }
+
+    .toggle-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.25);
+      transition: transform 0.15s ease;
+    }
+
+    .toggle input:checked + .toggle-switch {
+      background: #22c55e;
+    }
+
+    .toggle input:checked + .toggle-switch .toggle-knob {
+      transform: translateX(14px);
+    }
+
+    /* ACCOUNT PAGE */
+
+    #accountPage {
+      padding: 16px 24px 24px;
+    }
+
+    .account-inner {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .account-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .profile-avatar-frame {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .profile-avatar-frame span {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--global-nav-bg);
+    }
+
+    .profile-avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .account-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .account-title-block h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .account-subtitle {
+      font-size: 0.82rem;
+      color: var(--muted-text);
+    }
+
+    @media (max-width: 980px) {
+      .canvas-columns {
+        grid-template-columns: 190px minmax(0, 1fr);
+      }
+      .right-sidebar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .canvas-columns {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .course-nav {
+        display: none;
+      }
+      .canvas-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+
+    @media print {
+      .global-nav {
+        display: none;
+      }
+      .ic-main {
+        margin-left: 0;
+      }
+      #login-screen {
+        display: none !important;
+      }
+      .right-sidebar,
+      .btn,
+      .toggle,
+      #accountPage {
+        display: none !important;
+      }
+      body {
+        background: #ffffff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ic-app">
+    <!-- Canvas-style global nav -->
+    <nav class="global-nav">
+      <div class="global-nav-logo" id="globalLogoInitials">PS</div>
+      <ul class="global-nav-menu">
+        <li class="global-nav-item" id="navAccountItem">
+          <a id="navAccountLink" href="#" class="global-nav-link">
+            <div class="global-nav-icon" aria-hidden="true">
+              <!-- Account icon -->
+              <svg viewBox="0 0 24 24">
+                <path d="M12 12.75a4.25 4.25 0 1 0-4.25-4.25A4.25 4.25 0 0 0 12 12.75Zm0 2.25C8.824 15 4 16.54 4 19.25V20a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-.75C20 16.54 15.176 15 12 15Z"/>
+              </svg>
+            </div>
+            <div>Account</div>
+          </a>
+        </li>
+        <li class="global-nav-item global-nav-link-active" id="navDashboardItem">
+          <a id="navDashboardLink" href="#" class="global-nav-link">
+            <div class="global-nav-icon" aria-hidden="true">
+              <!-- Dashboard icon -->
+              <svg viewBox="0 0 24 24">
+                <path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"/>
+              </svg>
+            </div>
+            <div>Dashboard</div>
+          </a>
+        </li>
+        <li class="global-nav-item">
+          <a href="#" class="global-nav-link">
+            <div class="global-nav-icon" aria-hidden="true">
+              <!-- Courses icon -->
+              <svg viewBox="0 0 24 24">
+                <path d="M4 5.5C4 4.67 4.67 4 5.5 4h6A1.5 1.5 0 0 1 13 5.5V8H6a2 2 0 0 0-2 2v-4.5Zm0 6C4 10.67 4.67 10 5.5 10h9A1.5 1.5 0 0 1 16 11.5V14H6a2 2 0 0 0-2 2v-4.5Zm2 4.5A2 2 0 0 0 4 18v.5C4 19.88 5.12 21 6.5 21H17a1 1 0 0 0 0-2h-1v-1.5A1.5 1.5 0 0 0 14.5 16Z"/>
+              </svg>
+            </div>
+            <div>Courses</div>
+          </a>
+        </li>
+        <li class="global-nav-item">
+          <a href="#" class="global-nav-link">
+            <div class="global-nav-icon" aria-hidden="true">
+              <!-- Calendar icon -->
+              <svg viewBox="0 0 24 24">
+                <path d="M7 3a1 1 0 0 1 1 1v1h8V4a1 1 0 0 1 2 0v1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1V4a1 1 0 0 1 1-1Zm13 7H4v9h16Zm-9 2h2v2h-2Zm0 3h2v2h-2Zm3-3h2v2h-2Zm0 3h2v2h-2Z"/>
+              </svg>
+            </div>
+            <div>Calendar</div>
+          </a>
+        </li>
+        <li class="global-nav-item">
+          <a href="#" class="global-nav-link">
+            <div class="global-nav-icon" aria-hidden="true">
+              <!-- Inbox icon -->
+              <svg viewBox="0 0 24 24">
+                <path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6.5h-3.382l-1.724 3.447A2 2 0 0 1 13.053 16H10.95a2 2 0 0 1-1.84-1.053L7.382 11.5H4Zm3.618 8.5 1.276 2.553a1 1 0 0 0 .895.547h2.103a1 1 0 0 0 .895-.547L14.382 13.5H20V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5.5Z"/>
+              </svg>
+            </div>
+            <div>Inbox</div>
+          </a>
+        </li>
+        <li class="global-nav-item">
+          <a href="#" class="global-nav-link">
+            <div class="global-nav-icon" aria-hidden="true">
+              <!-- Help icon -->
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 1 0 10 10A10.012 10.012 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8.01 8.01 0 0 1-8 8Zm0-5a1 1 0 1 1-1 1 1 1 0 0 1 1-1Zm0-8a3 3 0 0 0-3 3 1 1 0 0 0 2 0 1 1 0 1 1 1.8.6 1 1 0 0 1-.3.7l-.78.78A2.48 2.48 0 0 0 11 14v.25a1 1 0 1 0 2 0V14a.53.53 0 0 1 .16-.38l.78-.78A3 3 0 0 0 12 7Z"/>
+              </svg>
+            </div>
+            <div>Help</div>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="ic-main">
+      <!-- LOGIN SCREEN -->
+      <div id="login-screen">
+        <div class="login-card">
+          <div class="login-header">
+            <div class="badge">
+              <span class="dot"></span>
+              SECURE STUDENT ACCESS
+            </div>
+
+            <div class="logo-frame" id="loginLogoFrame">
+              <span id="loginLogoInitials">PS</span>
+              <img id="loginLogoImage" class="hidden" alt="School logo" />
+            </div>
+
+            <h1 id="loginSchoolName">Parody School District</h1>
+            <div class="login-subtitle">
+              Unified Identity &amp; Transcript Management Portal
+            </div>
+          </div>
+
+          <form id="login-form">
+            <div class="field-group">
+              <label for="email">District Email Address</label>
+              <input
+                type="email"
+                id="email"
+                required
+                placeholder="first.last@example.edu"
+              />
+            </div>
+
+            <div class="field-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                required
+                placeholder="Enter password"
+              />
+              <div class="login-subtitle">
+                Use your campus credentials. Any values will sign in on this demo.
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              Sign in
+            </button>
+          </form>
+
+          <div class="login-footer">
+            <span>© <span id="year"></span> Student Systems Portal</span>
+            <button type="button" class="btn-ghost" id="fakeHelp">
+              Need help?
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD / COURSE HOME -->
+      <div id="dashboard" class="hidden">
+        <div class="canvas-shell">
+          <div class="canvas-top-bar">
+            <div>
+              <div class="breadcrumbs" id="breadcrumbsDashboard">
+                <span>Dashboard</span>
+                <span class="sep">›</span>
+                <span id="crumbSchoolName">Parody School District</span>
+                <span class="sep">›</span>
+                <span>Home</span>
+              </div>
+              <div class="breadcrumbs hidden" id="breadcrumbsAccount">
+                <span>Account</span>
+              </div>
+            </div>
+            <div class="top-bar-right">
+              <span class="status-pill">Enrolled</span>
+              <span class="student-id" id="studentId">Student ID: PSD-000000</span>
+              <button id="logout" class="btn-ghost" type="button">Sign out</button>
+            </div>
+          </div>
+
+          <!-- COURSE HOME VIEW -->
+          <div class="canvas-columns" id="canvasColumns">
+            <!-- COURSE NAV -->
+            <aside class="course-nav">
+              <div class="course-nav-term">2025–2026</div>
+              <ul class="course-nav-list">
+                <li class="course-nav-item active"><a href="#">Home</a></li>
+                <li class="course-nav-item"><a href="#">Announcements</a></li>
+                <li class="course-nav-item"><a href="#">Modules</a></li>
+                <li class="course-nav-item"><a href="#">Assignments</a></li>
+                <li class="course-nav-item"><a href="#">Discussions</a></li>
+                <li class="course-nav-item"><a href="#">Quizzes</a></li>
+                <li class="course-nav-item"><a href="#">Grades</a></li>
+                <li class="course-nav-item"><a href="#">Files</a></li>
+              </ul>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="course-main">
+              <div class="course-header">
+                <div class="logo-frame" id="logoFrame">
+                  <span id="logoInitials">PS</span>
+                  <img id="logoImage" class="hidden" alt="School logo" />
+                </div>
+                <div class="school-meta">
+                  <div class="school-name-display" id="schoolNameDisplay">
+                    Parody School District
+                  </div>
+                  <div class="school-subtitle">
+                    Registrar &amp; Enrollment – Student Schedule Overview
+                  </div>
+                </div>
+              </div>
+
+              <div class="page-title-row">
+                <div>
+                  <h2>Course Load</h2>
+                  <div class="page-title-sub" id="courseSummary">
+                    0 courses • 0.0 total credits
+                  </div>
+                </div>
+                <div class="page-actions">
+                  <button type="button" class="btn-ghost" id="printPage">
+                    Print / Export
+                  </button>
+                </div>
+              </div>
+
+              <!-- COURSES PANEL -->
+              <section class="panel">
+                <div class="panel-header">
+                  <div class="panel-title">Current Enrollments</div>
+                  <div class="panel-note">
+                    Term: <strong>Academic Year 2025–2026</strong>
+                  </div>
+                </div>
+
+                <table class="courses-table" id="coursesTable">
+                  <thead>
+                    <tr>
+                      <th>Course</th>
+                      <th>Title</th>
+                      <th>Term</th>
+                      <th>Credits</th>
+                    </tr>
+                  </thead>
+                  <tbody id="coursesBody">
+                    <!-- dynamic rows -->
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3">Total Registered Credits</td>
+                      <td id="totalCreditsCell">0.0</td>
+                    </tr>
+                  </tfoot>
+                </table>
+
+                <form id="courseForm" class="course-form" autocomplete="off">
+                  <input
+                    type="text"
+                    id="courseCode"
+                    placeholder="Course (e.g. CSCI 1010)"
+                    required
+                  />
+                  <input
+                    type="text"
+                    id="courseTitle"
+                    placeholder="Title"
+                    required
+                  />
+                  <input
+                    type="text"
+                    id="courseTerm"
+                    placeholder="Term (e.g. Fall 2025)"
+                    required
+                  />
+                  <input
+                    type="text"
+                    id="courseCredits"
+                    placeholder="Credits"
+                    required
+                  />
+                  <button type="submit" class="btn btn-secondary">
+                    Add Course
+                  </button>
+                </form>
+                <div id="courseError" class="error hidden">
+                  Credits must be a number (e.g. 3 or 4.5).
+                </div>
+              </section>
+
+              <!-- CONFIG / BRANDING PANEL -->
+              <section class="panel" id="configPanel">
+                <div class="panel-header">
+                  <div class="panel-title">Appearance &amp; Identity</div>
+                  <div class="panel-note">Customize school name &amp; logo</div>
+                </div>
+
+                <div class="field-group">
+                  <label for="schoolNameInput">School Name</label>
+                  <div class="inline-input">
+                    <input
+                      type="text"
+                      id="schoolNameInput"
+                      placeholder="Parody School District"
+                    />
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <label for="logoUrlInput">School Logo URL</label>
+                  <div class="inline-input">
+                    <input
+                      type="url"
+                      id="logoUrlInput"
+                      placeholder="https://example.com/logo.png"
+                    />
+                    <button type="button" class="btn btn-secondary" id="applyLogo">
+                      Apply Logo
+                    </button>
+                  </div>
+                  <div class="login-subtitle">
+                    Paste a direct image URL (PNG/JPG/SVG). Saved in this browser only.
+                  </div>
+                  <div id="logoError" class="error hidden">
+                    Unable to load logo from that URL.
+                  </div>
+                </div>
+
+                <ul class="info-list">
+                  <li>
+                    <span class="info-label">Profile Name</span>
+                    <span class="info-value" id="infoProfileName">Not set</span>
+                  </li>
+                  <li>
+                    <span class="info-label">Career</span>
+                    <span class="info-value">Undergraduate</span>
+                  </li>
+                  <li>
+                    <span class="info-label">Advising Unit</span>
+                    <span class="info-value">
+                      Central Advising – Registrar Desk
+                    </span>
+                  </li>
+                </ul>
+
+                <div class="small-heading">Upcoming Dates</div>
+                <ul class="dates-list">
+                  <li><span>Enrollment Opens</span><span>Aug 12</span></li>
+                  <li><span>Last Day to Add/Drop</span><span>Sep 3</span></li>
+                  <li><span>Tuition Due</span><span>Sep 15</span></li>
+                </ul>
+              </section>
+            </main>
+
+            <!-- RIGHT SIDEBAR -->
+            <aside class="right-sidebar">
+              <div class="sidebar-section-title">Course Actions</div>
+              <button class="btn btn-secondary sidebar-btn" type="button">
+                <i>📈</i> View Course Stream
+              </button>
+              <button class="btn btn-secondary sidebar-btn" type="button">
+                <i>📅</i> View Course Calendar
+              </button>
+              <button class="btn btn-secondary sidebar-btn" type="button">
+                <i>🔔</i> View Notifications
+              </button>
+
+              <div class="sidebar-section-title">Display</div>
+              <label class="toggle" title="Hide editor controls">
+                <input type="checkbox" id="officialViewToggle" />
+                <div class="toggle-switch">
+                  <div class="toggle-knob"></div>
+                </div>
+                <span>Official view</span>
+              </label>
+
+              <div class="sidebar-section-title">Local Data</div>
+              <button type="button" class="btn btn-ghost sidebar-btn" id="clearData">
+                Reset All Preferences
+              </button>
+              <div id="saveStatus" class="save-status">
+                Changes auto-saved locally.
+              </div>
+            </aside>
+          </div>
+
+          <!-- ACCOUNT VIEW -->
+          <div id="accountPage" class="hidden">
+            <div class="account-inner">
+              <div class="account-header">
+                <div class="profile-avatar-frame">
+                  <span id="profileAvatarInitials">ST</span>
+                  <img id="profileAvatarImage" class="hidden" alt="Profile avatar" />
+                </div>
+                <div class="account-title-block">
+                  <h2 id="profileNameDisplay">Student Account</h2>
+                  <div class="account-subtitle">
+                    Manage your profile details for this portal
+                  </div>
+                </div>
+              </div>
+
+              <section class="panel">
+                <div class="panel-header">
+                  <div class="panel-title">Profile Details</div>
+                  <div class="panel-note">Local to this browser only</div>
+                </div>
+
+                <div class="field-group">
+                  <label for="profileNameInput">Display Name</label>
+                  <input
+                    type="text"
+                    id="profileNameInput"
+                    placeholder="Student Name"
+                  />
+                  <div class="login-subtitle">
+                    Shown on this page and in summary fields. Does not change any real records.
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <label for="profileAvatarUrlInput">Profile Image URL</label>
+                  <div class="inline-input">
+                    <input
+                      type="url"
+                      id="profileAvatarUrlInput"
+                      placeholder="https://example.com/avatar.png"
+                    />
+                    <button type="button" class="btn btn-secondary" id="applyProfileAvatar">
+                      Apply Image
+                    </button>
+                  </div>
+                  <div class="login-subtitle">
+                    Paste a direct image URL (PNG/JPG/SVG). Saved locally with your profile.
+                  </div>
+                  <div id="profileAvatarError" class="error hidden">
+                    Unable to load profile image from that URL.
+                  </div>
+                </div>
+
+                <ul class="info-list">
+                  <li>
+                    <span class="info-label">Email</span>
+                    <span class="info-value" id="profileEmailDisplay">Not linked</span>
+                  </li>
+                  <li>
+                    <span class="info-label">Student ID</span>
+                    <span class="info-value" id="profileStudentIdDisplay">PSD-000000</span>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "parodySchoolSettings";
+
+    function saveSettings(settings) {
+      try {
+        const json = JSON.stringify(settings);
+        localStorage.setItem(STORAGE_KEY, json);
+        document.cookie =
+          "parodySchool=" +
+          encodeURIComponent(json) +
+          "; max-age=31536000; path=/";
+        setSaveStatus("Saved.");
+      } catch (e) {
+        console.error("Failed to save settings", e);
+        setSaveStatus("Could not save (storage error).");
+      }
+    }
+
+    function readCookieSettings() {
+      const cookies = document.cookie.split(";");
+      for (const raw of cookies) {
+        const [name, ...rest] = raw.split("=");
+        if (name && name.trim() === "parodySchool") {
+          try {
+            return JSON.parse(decodeURIComponent(rest.join("=")));
+          } catch (e) {
+            console.warn("Failed to parse cookie settings", e);
+          }
+        }
+      }
+      return null;
+    }
+
+    function loadSettings() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        try {
+          return JSON.parse(raw);
+        } catch (e) {
+          console.warn("Bad JSON in localStorage, trying cookie.");
+        }
+      }
+      return readCookieSettings() || null;
+    }
+
+    function setSaveStatus(text) {
+      const el = document.getElementById("saveStatus");
+      if (!el) return;
+      el.textContent = text;
+      clearTimeout(setSaveStatus._timer);
+      setSaveStatus._timer = setTimeout(() => {
+        el.textContent = "Changes auto-saved locally.";
+      }, 1800);
+    }
+
+    function generateStudentIdFromEmail(email) {
+      if (!email) return "PSD-000000";
+      let sum = 0;
+      for (let i = 0; i < email.length; i++) {
+        sum += email.charCodeAt(i) * (i + 3);
+      }
+      const code = (sum % 999999).toString().padStart(6, "0");
+      return "PSD-" + code;
+    }
+
+    const loginScreen = document.getElementById("login-screen");
+    const dashboard = document.getElementById("dashboard");
+
+    const loginForm = document.getElementById("login-form");
+    const yearSpan = document.getElementById("year");
+    const fakeHelpBtn = document.getElementById("fakeHelp");
+
+    const loginSchoolName = document.getElementById("loginSchoolName");
+    const loginLogoImage = document.getElementById("loginLogoImage");
+    const loginLogoInitials = document.getElementById("loginLogoInitials");
+    const globalLogoInitials = document.getElementById("globalLogoInitials");
+    const crumbSchoolName = document.getElementById("crumbSchoolName");
+
+    const schoolNameDisplay = document.getElementById("schoolNameDisplay");
+    const schoolNameInput = document.getElementById("schoolNameInput");
+    const logoImage = document.getElementById("logoImage");
+    const logoInitials = document.getElementById("logoInitials");
+    const logoUrlInput = document.getElementById("logoUrlInput");
+    const applyLogoBtn = document.getElementById("applyLogo");
+    const logoError = document.getElementById("logoError");
+
+    const infoProfileName = document.getElementById("infoProfileName");
+    const studentIdEl = document.getElementById("studentId");
+    const logoutBtn = document.getElementById("logout");
+
+    const coursesBody = document.getElementById("coursesBody");
+    const courseForm = document.getElementById("courseForm");
+    const courseCodeInput = document.getElementById("courseCode");
+    const courseTitleInput = document.getElementById("courseTitle");
+    const courseTermInput = document.getElementById("courseTerm");
+    const courseCreditsInput = document.getElementById("courseCredits");
+    const courseError = document.getElementById("courseError");
+    const courseSummary = document.getElementById("courseSummary");
+    const totalCreditsCell = document.getElementById("totalCreditsCell");
+
+    const clearDataBtn = document.getElementById("clearData");
+    const printPageBtn = document.getElementById("printPage");
+    const configPanel = document.getElementById("configPanel");
+    const officialViewToggle = document.getElementById("officialViewToggle");
+
+    const canvasColumns = document.getElementById("canvasColumns");
+    const accountPage = document.getElementById("accountPage");
+    const breadcrumbsDashboard = document.getElementById("breadcrumbsDashboard");
+    const breadcrumbsAccount = document.getElementById("breadcrumbsAccount");
+
+    const navAccountItem = document.getElementById("navAccountItem");
+    const navDashboardItem = document.getElementById("navDashboardItem");
+    const navAccountLink = document.getElementById("navAccountLink");
+    const navDashboardLink = document.getElementById("navDashboardLink");
+
+    const profileAvatarInitials = document.getElementById("profileAvatarInitials");
+    const profileAvatarImage = document.getElementById("profileAvatarImage");
+    const profileNameDisplay = document.getElementById("profileNameDisplay");
+    const profileNameInput = document.getElementById("profileNameInput");
+    const profileAvatarUrlInput = document.getElementById("profileAvatarUrlInput");
+    const applyProfileAvatarBtn = document.getElementById("applyProfileAvatar");
+    const profileAvatarError = document.getElementById("profileAvatarError");
+    const profileEmailDisplay = document.getElementById("profileEmailDisplay");
+    const profileStudentIdDisplay = document.getElementById("profileStudentIdDisplay");
+
+    const loginLogoFrame = document.getElementById("loginLogoFrame");
+
+    let appState = {
+      email: "",
+      studentId: "PSD-000000",
+      schoolName: "Parody School District",
+      logoUrl: "",
+      courses: [],
+      officialView: false,
+      profileName: "",
+      profileAvatarUrl: ""
+    };
+
+    let currentView = "dashboard"; // 'dashboard' or 'account'
+    let isLoggedIn = false;
+
+    function computeInitialsFromName(name) {
+      if (!name) return "PS";
+      const words = name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 3);
+      const initials = words.map((w) => w[0].toUpperCase()).join("");
+      return initials || "PS";
+    }
+
+    function computeProfileInitials() {
+      if (appState.profileName && appState.profileName.trim()) {
+        return computeInitialsFromName(appState.profileName);
+      }
+      if (appState.email) {
+        const beforeAt = appState.email.split("@")[0];
+        return computeInitialsFromName(beforeAt || "Student");
+      }
+      return "ST";
+    }
+
+    function updateLogoInitialsFromName(name) {
+      const initials = computeInitialsFromName(name);
+      if (logoInitials) logoInitials.textContent = initials;
+      if (loginLogoInitials) loginLogoInitials.textContent = initials;
+      if (globalLogoInitials) globalLogoInitials.textContent = initials;
+    }
+
+    function applyBrandingToLogin() {
+      if (loginSchoolName) {
+        loginSchoolName.textContent =
+          appState.schoolName || "Parody School District";
+      }
+      if (crumbSchoolName) {
+        crumbSchoolName.textContent =
+          appState.schoolName || "Parody School District";
+      }
+
+      const initials = computeInitialsFromName(appState.schoolName);
+      if (loginLogoInitials) loginLogoInitials.textContent = initials;
+      if (globalLogoInitials) globalLogoInitials.textContent = initials;
+
+      if (appState.logoUrl && loginLogoImage) {
+        loginLogoImage.src = appState.logoUrl;
+        loginLogoImage.classList.remove("hidden");
+        loginLogoInitials.classList.add("hidden");
+      } else if (loginLogoImage && loginLogoInitials) {
+        loginLogoImage.classList.add("hidden");
+        loginLogoInitials.classList.remove("hidden");
+      }
+    }
+
+    function applyLogoUrl(url) {
+      logoError.classList.add("hidden");
+      if (!url) {
+        if (logoImage) {
+          logoImage.src = "";
+          logoImage.classList.add("hidden");
+        }
+        if (logoInitials) logoInitials.classList.remove("hidden");
+
+        if (loginLogoImage) {
+          loginLogoImage.src = "";
+          loginLogoImage.classList.add("hidden");
+        }
+        if (loginLogoInitials) loginLogoInitials.classList.remove("hidden");
+
+        appState.logoUrl = "";
+        saveSettings(appState);
+        return;
+      }
+
+      const temp = new Image();
+      temp.onload = () => {
+        if (logoImage) {
+          logoImage.src = url;
+          logoImage.classList.remove("hidden");
+          logoInitials.classList.add("hidden");
+        }
+
+        if (loginLogoImage) {
+          loginLogoImage.src = url;
+          loginLogoImage.classList.remove("hidden");
+          loginLogoInitials.classList.add("hidden");
+        }
+
+        appState.logoUrl = url;
+        saveSettings(appState);
+      };
+      temp.onerror = () => {
+        logoError.classList.remove("hidden");
+      };
+      temp.src = url;
+    }
+
+    function applyAvatarUrl(url) {
+      profileAvatarError.classList.add("hidden");
+      if (!url) {
+        if (profileAvatarImage) {
+          profileAvatarImage.src = "";
+          profileAvatarImage.classList.add("hidden");
+        }
+        if (profileAvatarInitials) {
+          profileAvatarInitials.classList.remove("hidden");
+          profileAvatarInitials.textContent = computeProfileInitials();
+        }
+        appState.profileAvatarUrl = "";
+        saveSettings(appState);
+        return;
+      }
+
+      const temp = new Image();
+      temp.onload = () => {
+        if (profileAvatarImage) {
+          profileAvatarImage.src = url;
+          profileAvatarImage.classList.remove("hidden");
+        }
+        if (profileAvatarInitials) {
+          profileAvatarInitials.classList.add("hidden");
+        }
+        appState.profileAvatarUrl = url;
+        saveSettings(appState);
+      };
+      temp.onerror = () => {
+        profileAvatarError.classList.remove("hidden");
+      };
+      temp.src = url;
+    }
+
+    function setGlobalNavActive(which) {
+      if (which === "account") {
+        navAccountItem.classList.add("global-nav-link-active");
+        navDashboardItem.classList.remove("global-nav-link-active");
+      } else {
+        navDashboardItem.classList.add("global-nav-link-active");
+        navAccountItem.classList.remove("global-nav-link-active");
+      }
+    }
+
+    function showDashboardView() {
+      currentView = "dashboard";
+      setGlobalNavActive("dashboard");
+      if (breadcrumbsDashboard) breadcrumbsDashboard.classList.remove("hidden");
+      if (breadcrumbsAccount) breadcrumbsAccount.classList.add("hidden");
+      if (canvasColumns) canvasColumns.classList.remove("hidden");
+      if (accountPage) accountPage.classList.add("hidden");
+    }
+
+    function showAccountView() {
+      currentView = "account";
+      setGlobalNavActive("account");
+      if (breadcrumbsDashboard) breadcrumbsDashboard.classList.add("hidden");
+      if (breadcrumbsAccount) breadcrumbsAccount.classList.remove("hidden");
+      if (canvasColumns) canvasColumns.classList.add("hidden");
+      if (accountPage) accountPage.classList.remove("hidden");
+    }
+
+    yearSpan.textContent = new Date().getFullYear().toString();
+
+    const persisted = loadSettings();
+    if (persisted) {
+      appState = Object.assign(appState, persisted);
+    }
+    applyBrandingToLogin();
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        alert("Please enter your district email and password.");
+        return;
+      }
+
+      appState.email = email;
+      appState.studentId = generateStudentIdFromEmail(email);
+      saveSettings(appState);
+
+      enterDashboard();
+    });
+
+    fakeHelpBtn.addEventListener("click", () => {
+      alert(
+        "Demo mode:\nAny email + password will sign in.\n\nThis is a parody interface; do not enter real credentials."
+      );
+    });
+
+    function enterDashboard() {
+      isLoggedIn = true;
+      loginScreen.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      showDashboardView();
+      applyStateToUI();
+    }
+
+    function exitDashboard() {
+      isLoggedIn = false;
+      dashboard.classList.add("hidden");
+      loginScreen.classList.remove("hidden");
+      currentView = "dashboard";
+      setGlobalNavActive("dashboard");
+      applyBrandingToLogin();
+    }
+
+    logoutBtn.addEventListener("click", () => {
+      exitDashboard();
+    });
+
+    // Global nav switching
+    navAccountLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!isLoggedIn) return;
+      showAccountView();
+    });
+
+    navDashboardLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!isLoggedIn) return;
+      showDashboardView();
+    });
+
+    schoolNameInput.addEventListener("input", () => {
+      const value = schoolNameInput.value.trim();
+      appState.schoolName = value || "Parody School District";
+      schoolNameDisplay.textContent = appState.schoolName;
+      if (crumbSchoolName) crumbSchoolName.textContent = appState.schoolName;
+      updateLogoInitialsFromName(appState.schoolName);
+      applyBrandingToLogin();
+      saveSettings(appState);
+    });
+
+    applyLogoBtn.addEventListener("click", () => {
+      const url = logoUrlInput.value.trim();
+      applyLogoUrl(url);
+    });
+
+    profileNameInput.addEventListener("input", () => {
+      const value = profileNameInput.value.trim();
+      appState.profileName = value;
+      profileNameDisplay.textContent = value || "Student Account";
+      if (!appState.profileAvatarUrl) {
+        profileAvatarInitials.textContent = computeProfileInitials();
+      }
+      saveSettings(appState);
+
+      if (appState.profileName) {
+        infoProfileName.textContent = appState.profileName;
+      } else if (appState.email) {
+        infoProfileName.textContent = appState.email;
+      } else {
+        infoProfileName.textContent = "Not set";
+      }
+    });
+
+    applyProfileAvatarBtn.addEventListener("click", () => {
+      const url = profileAvatarUrlInput.value.trim();
+      applyAvatarUrl(url);
+    });
+
+    function renderCourses() {
+      coursesBody.innerHTML = "";
+      let totalCredits = 0;
+
+      appState.courses.forEach((course, idx) => {
+        const tr = document.createElement("tr");
+
+        const tdCode = document.createElement("td");
+        tdCode.textContent = course.code;
+        const tdTitle = document.createElement("td");
+        tdTitle.textContent = course.title;
+        const tdTerm = document.createElement("td");
+        tdTerm.textContent = course.term;
+        const tdCredits = document.createElement("td");
+        tdCredits.textContent = course.credits.toFixed(1);
+
+        tr.appendChild(tdCode);
+        tr.appendChild(tdTitle);
+        tr.appendChild(tdTerm);
+        tr.appendChild(tdCredits);
+
+        tr.addEventListener("dblclick", () => {
+          if (
+            confirm(
+              `Remove course "${course.code} – ${course.title}" from schedule?`
+            )
+          ) {
+            appState.courses.splice(idx, 1);
+            saveSettings(appState);
+            renderCourses();
+          }
+        });
+
+        coursesBody.appendChild(tr);
+        totalCredits += course.credits;
+      });
+
+      totalCreditsCell.textContent = totalCredits.toFixed(1);
+      courseSummary.textContent = `${appState.courses.length} course${
+        appState.courses.length === 1 ? "" : "s"
+      } • ${totalCredits.toFixed(1)} total credits`;
+    }
+
+    courseForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      courseError.classList.add("hidden");
+
+      const code = courseCodeInput.value.trim() || "N/A";
+      const title = courseTitleInput.value.trim() || "Untitled Course";
+      const term = courseTermInput.value.trim() || "TBD";
+      const creditsRaw = courseCreditsInput.value.trim();
+
+      const credits = parseFloat(creditsRaw.replace(",", "."));
+      if (Number.isNaN(credits)) {
+        courseError.classList.remove("hidden");
+        return;
+      }
+
+      appState.courses.push({ code, title, term, credits });
+      saveSettings(appState);
+      renderCourses();
+
+      courseCodeInput.value = "";
+      courseTitleInput.value = "";
+      courseTermInput.value = "";
+      courseCreditsInput.value = "";
+      courseCodeInput.focus();
+    });
+
+    clearDataBtn.addEventListener("click", () => {
+      if (
+        !confirm(
+          "This will clear courses, school name, logo, and profile settings from this browser. Continue?"
+        )
+      ) {
+        return;
+      }
+      localStorage.removeItem(STORAGE_KEY);
+      document.cookie = "parodySchool=; max-age=0; path=/";
+      appState = {
+        email: appState.email,
+        studentId: appState.studentId,
+        schoolName: "Parody School District",
+        logoUrl: "",
+        courses: [],
+        officialView: false,
+        profileName: "",
+        profileAvatarUrl: ""
+      };
+      applyStateToUI();
+      applyBrandingToLogin();
+      setSaveStatus("Preferences reset.");
+    });
+
+    printPageBtn.addEventListener("click", () => {
+      window.print();
+    });
+
+    officialViewToggle.addEventListener("change", () => {
+      appState.officialView = officialViewToggle.checked;
+      saveSettings(appState);
+      applyOfficialView();
+    });
+
+    function applyOfficialView() {
+      const hide = appState.officialView;
+
+      if (courseForm) {
+        courseForm.classList.toggle("hidden", hide);
+      }
+      if (courseError) {
+        courseError.classList.toggle("hidden", hide);
+      }
+      if (clearDataBtn) {
+        clearDataBtn.classList.toggle("hidden", hide);
+      }
+      if (configPanel) {
+        configPanel.classList.toggle("hidden", hide);
+      }
+    }
+
+    function applyStateToUI() {
+      schoolNameDisplay.textContent = appState.schoolName;
+      schoolNameInput.value = appState.schoolName;
+      if (crumbSchoolName) crumbSchoolName.textContent = appState.schoolName;
+      updateLogoInitialsFromName(appState.schoolName);
+
+      logoUrlInput.value = appState.logoUrl || "";
+      if (appState.logoUrl) {
+        logoImage.src = appState.logoUrl;
+        logoImage.classList.remove("hidden");
+        logoInitials.classList.add("hidden");
+      } else {
+        logoImage.classList.add("hidden");
+        logoInitials.classList.remove("hidden");
+      }
+
+      studentIdEl.textContent = "Student ID: " + appState.studentId;
+      profileStudentIdDisplay.textContent = appState.studentId;
+
+      profileEmailDisplay.textContent = appState.email || "Not linked";
+
+      // profile / account
+      profileNameInput.value = appState.profileName || "";
+      profileNameDisplay.textContent =
+        appState.profileName || "Student Account";
+
+      profileAvatarUrlInput.value = appState.profileAvatarUrl || "";
+      if (appState.profileAvatarUrl) {
+        profileAvatarImage.src = appState.profileAvatarUrl;
+        profileAvatarImage.classList.remove("hidden");
+        profileAvatarInitials.classList.add("hidden");
+      } else {
+        profileAvatarImage.classList.add("hidden");
+        profileAvatarInitials.classList.remove("hidden");
+        profileAvatarInitials.textContent = computeProfileInitials();
+      }
+
+      if (appState.profileName) {
+        infoProfileName.textContent = appState.profileName;
+      } else if (appState.email) {
+        infoProfileName.textContent = appState.email;
+      } else {
+        infoProfileName.textContent = "Not set";
+      }
+
+      renderCourses();
+
+      officialViewToggle.checked = !!appState.officialView;
+      applyOfficialView();
+
+      applyBrandingToLogin();
+    }
+
+    // If you want auto-login after refresh when email already set, uncomment:
+    // if (appState.email) { isLoggedIn = true; enterDashboard(); }
+
+  </script>
+</body>
+</html>

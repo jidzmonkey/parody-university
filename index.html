@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>parody-school.com – LMS-style Portal (Parody)</title>
+  <title>parody-school.com – LMS-style Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
@@ -461,26 +461,6 @@
       margin-top: 2px;
     }
 
-    .parody-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      font-size: 0.7rem;
-      color: #4b5563;
-      background: #f9fafb;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .parody-badge::before {
-      content: "●";
-      font-size: 0.6rem;
-      margin-right: 4px;
-      color: #f97316;
-    }
-
     .page-title-row {
       display: flex;
       align-items: flex-start;
@@ -545,11 +525,18 @@
       color: var(--muted-text);
     }
 
+    /* Table scroll container for mobile */
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+    }
+
     .courses-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.82rem;
       margin-top: 4px;
+      min-width: 480px; /* ensures scroll instead of squashing on small screens */
     }
 
     .courses-table th,
@@ -644,8 +631,7 @@
       font-weight: 600;
     }
 
-    .dates-list,
-    .links-list {
+    .dates-list {
       list-style: none;
       padding: 0;
       margin: 4px 0 0;
@@ -653,21 +639,11 @@
       color: #374151;
     }
 
-    .dates-list li,
-    .links-list li {
+    .dates-list li {
       display: flex;
       justify-content: space-between;
       margin-bottom: 2px;
       gap: 8px;
-    }
-
-    .link-faint {
-      color: var(--link);
-      font-size: 0.8rem;
-    }
-
-    .link-faint:hover {
-      text-decoration: underline;
     }
 
     /* RIGHT SIDEBAR */
@@ -832,6 +808,180 @@
       font-weight: 600;
     }
 
+    /* ID CARD MODAL */
+
+    .id-card-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .id-card-overlay.active {
+      display: flex;
+    }
+
+    .id-card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 16px 18px 14px;
+      width: 320px;
+      max-width: 90vw;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
+      border: 1px solid #e5e7eb;
+      position: relative;
+    }
+
+    .id-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .id-card-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .id-card-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .id-card-logo span {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--global-nav-bg);
+    }
+
+    .id-card-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .id-card-school {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .id-card-school-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .id-card-school-sub {
+      font-size: 0.7rem;
+      color: var(--muted-text);
+    }
+
+    .id-card-tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #4b5563;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 2px 8px;
+    }
+
+    .id-card-body {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .id-card-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f4f6;
+      flex-shrink: 0;
+    }
+
+    .id-card-avatar span {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    .id-card-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .id-card-fields {
+      font-size: 0.78rem;
+    }
+
+    .id-card-field {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .id-card-label {
+      color: var(--muted-text);
+    }
+
+    .id-card-value {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .id-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      color: var(--muted-text);
+    }
+
+    .id-card-barcode {
+      font-family: "Lucida Console", "Courier New", monospace;
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      background: #111827;
+      color: #f9fafb;
+      padding: 3px 6px;
+      border-radius: 3px;
+    }
+
+    .id-card-close {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-size: 0.9rem;
+      color: var(--muted-text);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
     /* RESPONSIVE */
 
     @media (max-width: 980px) {
@@ -885,7 +1035,8 @@
       .btn,
       .toggle,
       #accountPage,
-      .disclaimer-footer {
+      .disclaimer-footer,
+      .id-card-overlay {
         display: none !important;
       }
       body {
@@ -898,7 +1049,7 @@
   <div class="ic-app">
     <!-- Global nav -->
     <nav class="global-nav">
-      <div class="global-nav-logo" id="globalLogoInitials">PS</div>
+      <div class="global-nav-logo" id="globalLogoInitials">SS</div>
       <ul class="global-nav-menu">
         <li class="global-nav-item" id="navAccountItem">
           <a id="navAccountLink" href="#" class="global-nav-link">
@@ -976,18 +1127,23 @@
           <div class="login-header">
             <div class="badge">
               <span class="dot"></span>
-              SECURE STUDENT ACCESS
+              SECURE STUDENT ACCESS (LOCAL)
             </div>
 
             <div class="logo-frame" id="loginLogoFrame">
-              <span id="loginLogoInitials">PS</span>
+              <span id="loginLogoInitials">SS</span>
               <img id="loginLogoImage" class="hidden" alt="School logo" />
             </div>
 
-            <h1 id="loginSchoolName">Parody School District</h1>
+            <h1 id="loginSchoolName">Sample School District</h1>
             <div class="login-subtitle">
               Unified Identity &amp; Transcript Management Portal
             </div>
+          </div>
+
+          <div class="login-warning">
+            This login is simulated and handled in your browser only. Do
+            <strong>not</strong> use real passwords or institutional credentials.
           </div>
 
           <form id="login-form">
@@ -1010,6 +1166,7 @@
                 placeholder="Enter any password"
               />
               <div class="login-subtitle">
+                Any values will sign in locally for this interface.
               </div>
             </div>
 
@@ -1035,7 +1192,7 @@
               <div class="breadcrumbs" id="breadcrumbsDashboard">
                 <span>Dashboard</span>
                 <span class="sep">›</span>
-                <span id="crumbSchoolName">Parody School District</span>
+                <span id="crumbSchoolName">Sample School District</span>
                 <span class="sep">›</span>
                 <span>Home</span>
               </div>
@@ -1045,7 +1202,7 @@
             </div>
             <div class="top-bar-right">
               <span class="status-pill">Enrolled</span>
-              <span class="student-id" id="studentId">Student ID: PSD-000000</span>
+              <span class="student-id" id="studentId">Student ID: SSD-000000</span>
               <button id="logout" class="btn-ghost" type="button">Sign out</button>
             </div>
           </div>
@@ -1071,13 +1228,13 @@
             <main class="course-main">
               <div class="course-header">
                 <div class="logo-frame" id="logoFrame">
-                  <span id="logoInitials">PS</span>
+                  <span id="logoInitials">SS</span>
                   <img id="logoImage" class="hidden" alt="School logo" />
                 </div>
                 <div class="school-meta">
                   <div class="school-name-row">
                     <div class="school-name-display" id="schoolNameDisplay">
-                      Parody School District
+                      Sample School District
                     </div>
                   </div>
                   <div class="school-subtitle">
@@ -1109,25 +1266,27 @@
                   </div>
                 </div>
 
-                <table class="courses-table" id="coursesTable">
-                  <thead>
-                    <tr>
-                      <th>Course</th>
-                      <th>Title</th>
-                      <th>Term</th>
-                      <th>Credits</th>
-                    </tr>
-                  </thead>
-                  <tbody id="coursesBody">
-                    <!-- dynamic rows -->
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="3">Total Registered Credits</td>
-                      <td id="totalCreditsCell">0.0</td>
-                    </tr>
-                  </tfoot>
-                </table>
+                <div class="table-scroll">
+                  <table class="courses-table" id="coursesTable">
+                    <thead>
+                      <tr>
+                        <th>Course</th>
+                        <th>Title</th>
+                        <th>Term</th>
+                        <th>Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody id="coursesBody">
+                      <!-- dynamic rows -->
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="3">Total Registered Credits</td>
+                        <td id="totalCreditsCell">0.0</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
 
                 <form id="courseForm" class="course-form" autocomplete="off">
                   <input
@@ -1176,7 +1335,7 @@
                     <input
                       type="text"
                       id="schoolNameInput"
-                      placeholder="Parody School District"
+                      placeholder="Sample School District"
                     />
                   </div>
                 </div>
@@ -1240,7 +1399,11 @@
                 <i>🔔</i> View Notifications
               </button>
 
-              <div class="sidebar-section-title">Display</div>
+              <div class="sidebar-section-title">ID &amp; Display</div>
+              <button class="btn btn-secondary sidebar-btn" type="button" id="idCardBtn">
+                <i>🎫</i> ID Card
+              </button>
+
               <label class="toggle" title="Hide editor controls">
                 <input type="checkbox" id="officialViewToggle" />
                 <div class="toggle-switch">
@@ -1270,7 +1433,7 @@
                 <div class="account-title-block">
                   <h2 id="profileNameDisplay">Student Account</h2>
                   <div class="account-subtitle">
-                    Manage your profile details for this local demo
+                    Manage your profile details for this interface
                   </div>
                 </div>
               </div>
@@ -1281,35 +1444,38 @@
                   <div class="panel-note">Stored only in this browser</div>
                 </div>
 
-                <div class="field-group">
-                  <label for="profileNameInput">Display Name</label>
-                  <input
-                    type="text"
-                    id="profileNameInput"
-                    placeholder="Student Name"
-                  />
-                  <div class="login-subtitle">
-                    Shown on this page and in summary fields. Does not change any real records.
-                  </div>
-                </div>
-
-                <div class="field-group">
-                  <label for="profileAvatarUrlInput">Profile Image URL</label>
-                  <div class="inline-input">
+                <!-- Profile editing section that official view can hide -->
+                <div id="profileEditSection">
+                  <div class="field-group">
+                    <label for="profileNameInput">Display Name</label>
                     <input
-                      type="url"
-                      id="profileAvatarUrlInput"
-                      placeholder="https://example.com/avatar.png"
+                      type="text"
+                      id="profileNameInput"
+                      placeholder="Student Name"
                     />
-                    <button type="button" class="btn btn-secondary" id="applyProfileAvatar">
-                      Apply Image
-                    </button>
+                    <div class="login-subtitle">
+                      Shown on this page and in summary fields. Does not change any real records.
+                    </div>
                   </div>
-                  <div class="login-subtitle">
-                    Paste a direct image URL (PNG/JPG/SVG). Saved locally with your profile.
-                  </div>
-                  <div id="profileAvatarError" class="error hidden">
-                    Unable to load profile image from that URL.
+
+                  <div class="field-group">
+                    <label for="profileAvatarUrlInput">Profile Image URL</label>
+                    <div class="inline-input">
+                      <input
+                        type="url"
+                        id="profileAvatarUrlInput"
+                        placeholder="https://example.com/avatar.png"
+                      />
+                      <button type="button" class="btn btn-secondary" id="applyProfileAvatar">
+                        Apply Image
+                      </button>
+                    </div>
+                    <div class="login-subtitle">
+                      Paste a direct image URL (PNG/JPG/SVG). Saved locally with your profile.
+                    </div>
+                    <div id="profileAvatarError" class="error hidden">
+                      Unable to load profile image from that URL.
+                    </div>
                   </div>
                 </div>
 
@@ -1320,7 +1486,7 @@
                   </li>
                   <li>
                     <span class="info-label">Student ID</span>
-                    <span class="info-value" id="profileStudentIdDisplay">PSD-000000</span>
+                    <span class="info-value" id="profileStudentIdDisplay">SSD-000000</span>
                   </li>
                 </ul>
               </section>
@@ -1332,13 +1498,61 @@
       <!-- DISCLAIMER FOOTER (visible on login + dashboard) -->
       <footer class="disclaimer-footer">
         <span>
-          This interface is a UX tool.
+          <strong>Private interface.</strong> For personal testing and training only;
+          not connected to any institution or live data.
         </span>
         <span>
-          Do not enter real passwords or personally sensitive institutional credentials.
-          All data here is local to your browser.
+          Do not enter real passwords or sensitive credentials. All data is stored locally in this browser.
         </span>
       </footer>
+    </div>
+  </div>
+
+  <!-- ID CARD MODAL -->
+  <div class="id-card-overlay" id="idCardOverlay">
+    <div class="id-card" role="dialog" aria-modal="true" aria-labelledby="idCardSchoolName">
+      <button class="id-card-close" id="closeIdCardBtn" type="button">✕</button>
+      <div class="id-card-header">
+        <div class="id-card-brand">
+          <div class="id-card-logo">
+            <span id="idCardLogoInitials">SS</span>
+            <img id="idCardLogoImage" class="hidden" alt="School logo" />
+          </div>
+          <div class="id-card-school">
+            <div class="id-card-school-name" id="idCardSchoolName">Sample School District</div>
+            <div class="id-card-school-sub">Student Identification</div>
+          </div>
+        </div>
+        <div class="id-card-tag">Digital ID</div>
+      </div>
+      <div class="id-card-body">
+        <div class="id-card-avatar">
+          <span id="idCardAvatarInitials">ST</span>
+          <img id="idCardAvatarImage" class="hidden" alt="Profile avatar" />
+        </div>
+        <div class="id-card-fields">
+          <div class="id-card-field">
+            <span class="id-card-label">Name</span>
+            <span class="id-card-value" id="idCardProfileName">Student Name</span>
+          </div>
+          <div class="id-card-field">
+            <span class="id-card-label">Student ID</span>
+            <span class="id-card-value" id="idCardStudentId">SSD-000000</span>
+          </div>
+          <div class="id-card-field">
+            <span class="id-card-label">Status</span>
+            <span class="id-card-value">Active</span>
+          </div>
+          <div class="id-card-field">
+            <span class="id-card-label">Valid Thru</span>
+            <span class="id-card-value" id="idCardValidThru">06/30/2026</span>
+          </div>
+        </div>
+      </div>
+      <div class="id-card-footer">
+        <span>Campus Access · Library · Exams</span>
+        <span class="id-card-barcode" id="idCardBarcode">|| ||| | |||| |</span>
+      </div>
     </div>
   </div>
 
@@ -1398,13 +1612,13 @@
     }
 
     function generateStudentIdFromEmail(email) {
-      if (!email) return "PSD-000000";
+      if (!email) return "SSD-000000";
       let sum = 0;
       for (let i = 0; i < email.length; i++) {
         sum += email.charCodeAt(i) * (i + 3);
       }
       const code = (sum % 999999).toString().padStart(6, "0");
-      return "PSD-" + code;
+      return "SSD-" + code;
     }
 
     const loginScreen = document.getElementById("login-screen");
@@ -1466,13 +1680,28 @@
     const profileAvatarError = document.getElementById("profileAvatarError");
     const profileEmailDisplay = document.getElementById("profileEmailDisplay");
     const profileStudentIdDisplay = document.getElementById("profileStudentIdDisplay");
+    const profileEditSection = document.getElementById("profileEditSection");
 
     const loginLogoFrame = document.getElementById("loginLogoFrame");
 
+    // ID Card elements
+    const idCardBtn = document.getElementById("idCardBtn");
+    const idCardOverlay = document.getElementById("idCardOverlay");
+    const closeIdCardBtn = document.getElementById("closeIdCardBtn");
+    const idCardLogoInitials = document.getElementById("idCardLogoInitials");
+    const idCardLogoImage = document.getElementById("idCardLogoImage");
+    const idCardSchoolName = document.getElementById("idCardSchoolName");
+    const idCardAvatarInitials = document.getElementById("idCardAvatarInitials");
+    const idCardAvatarImage = document.getElementById("idCardAvatarImage");
+    const idCardProfileName = document.getElementById("idCardProfileName");
+    const idCardStudentId = document.getElementById("idCardStudentId");
+    const idCardValidThru = document.getElementById("idCardValidThru");
+    const idCardBarcode = document.getElementById("idCardBarcode");
+
     let appState = {
       email: "",
-      studentId: "PSD-000000",
-      schoolName: "Parody School District",
+      studentId: "SSD-000000",
+      schoolName: "Sample School District",
       logoUrl: "",
       courses: [],
       officialView: false,
@@ -1484,13 +1713,13 @@
     let isLoggedIn = false;
 
     function computeInitialsFromName(name) {
-      if (!name) return "PS";
+      if (!name) return "SS";
       const words = name
         .split(/\s+/)
         .filter(Boolean)
         .slice(0, 3);
       const initials = words.map((w) => w[0].toUpperCase()).join("");
-      return initials || "PS";
+      return initials || "SS";
     }
 
     function computeProfileInitials() {
@@ -1509,21 +1738,23 @@
       if (logoInitials) logoInitials.textContent = initials;
       if (loginLogoInitials) loginLogoInitials.textContent = initials;
       if (globalLogoInitials) globalLogoInitials.textContent = initials;
+      if (idCardLogoInitials) idCardLogoInitials.textContent = initials;
     }
 
     function applyBrandingToLogin() {
       if (loginSchoolName) {
         loginSchoolName.textContent =
-          appState.schoolName || "Parody School District";
+          appState.schoolName || "Sample School District";
       }
       if (crumbSchoolName) {
         crumbSchoolName.textContent =
-          appState.schoolName || "Parody School District";
+          appState.schoolName || "Sample School District";
       }
 
       const initials = computeInitialsFromName(appState.schoolName);
       if (loginLogoInitials) loginLogoInitials.textContent = initials;
       if (globalLogoInitials) globalLogoInitials.textContent = initials;
+      if (idCardLogoInitials) idCardLogoInitials.textContent = initials;
 
       if (appState.logoUrl && loginLogoImage) {
         loginLogoImage.src = appState.logoUrl;
@@ -1550,6 +1781,12 @@
         }
         if (loginLogoInitials) loginLogoInitials.classList.remove("hidden");
 
+        if (idCardLogoImage) {
+          idCardLogoImage.src = "";
+          idCardLogoImage.classList.add("hidden");
+        }
+        if (idCardLogoInitials) idCardLogoInitials.classList.remove("hidden");
+
         appState.logoUrl = "";
         saveSettings(appState);
         return;
@@ -1567,6 +1804,12 @@
           loginLogoImage.src = url;
           loginLogoImage.classList.remove("hidden");
           loginLogoInitials.classList.add("hidden");
+        }
+
+        if (idCardLogoImage) {
+          idCardLogoImage.src = url;
+          idCardLogoImage.classList.remove("hidden");
+          idCardLogoInitials.classList.add("hidden");
         }
 
         appState.logoUrl = url;
@@ -1589,6 +1832,16 @@
           profileAvatarInitials.classList.remove("hidden");
           profileAvatarInitials.textContent = computeProfileInitials();
         }
+
+        if (idCardAvatarImage) {
+          idCardAvatarImage.src = "";
+          idCardAvatarImage.classList.add("hidden");
+        }
+        if (idCardAvatarInitials) {
+          idCardAvatarInitials.classList.remove("hidden");
+          idCardAvatarInitials.textContent = computeProfileInitials();
+        }
+
         appState.profileAvatarUrl = "";
         saveSettings(appState);
         return;
@@ -1603,6 +1856,15 @@
         if (profileAvatarInitials) {
           profileAvatarInitials.classList.add("hidden");
         }
+
+        if (idCardAvatarImage) {
+          idCardAvatarImage.src = url;
+          idCardAvatarImage.classList.remove("hidden");
+        }
+        if (idCardAvatarInitials) {
+          idCardAvatarInitials.classList.add("hidden");
+        }
+
         appState.profileAvatarUrl = url;
         saveSettings(appState);
       };
@@ -1654,7 +1916,7 @@
       const password = document.getElementById("password").value;
 
       if (!email || !password) {
-        alert("Please enter your email and password.");
+        alert("Please enter your email and a password.");
         return;
       }
 
@@ -1667,7 +1929,7 @@
 
     fakeHelpBtn.addEventListener("click", () => {
       alert(
-        "Demo mode:\nAny email + password will sign in locally.\n\nThis is a parody / training interface; do not enter real institutional credentials."
+        "This interface runs locally in your browser.\n\nDo not use real passwords or institutional credentials."
       );
     });
 
@@ -1707,17 +1969,19 @@
 
     schoolNameInput.addEventListener("input", () => {
       const value = schoolNameInput.value.trim();
-      appState.schoolName = value || "Parody School District";
+      appState.schoolName = value || "Sample School District";
       schoolNameDisplay.textContent = appState.schoolName;
       if (crumbSchoolName) crumbSchoolName.textContent = appState.schoolName;
       updateLogoInitialsFromName(appState.schoolName);
       applyBrandingToLogin();
       saveSettings(appState);
+      updateIdCard();
     });
 
     applyLogoBtn.addEventListener("click", () => {
       const url = logoUrlInput.value.trim();
       applyLogoUrl(url);
+      updateIdCard();
     });
 
     profileNameInput.addEventListener("input", () => {
@@ -1736,11 +2000,13 @@
       } else {
         infoProfileName.textContent = "Not set";
       }
+      updateIdCard();
     });
 
     applyProfileAvatarBtn.addEventListener("click", () => {
       const url = profileAvatarUrlInput.value.trim();
       applyAvatarUrl(url);
+      updateIdCard();
     });
 
     function renderCourses() {
@@ -1825,7 +2091,7 @@
       appState = {
         email: appState.email,
         studentId: appState.studentId,
-        schoolName: "Parody School District",
+        schoolName: "Sample School District",
         logoUrl: "",
         courses: [],
         officialView: false,
@@ -1862,7 +2128,87 @@
       if (configPanel) {
         configPanel.classList.toggle("hidden", hide);
       }
+      if (profileEditSection) {
+        profileEditSection.classList.toggle("hidden", hide);
+      }
     }
+
+    // ID Card logic
+    function updateIdCard() {
+      const school = appState.schoolName || "Sample School District";
+      const profName =
+        appState.profileName || appState.email || "Student Name";
+      const sid = appState.studentId || "SSD-000000";
+
+      if (idCardSchoolName) idCardSchoolName.textContent = school;
+      if (idCardProfileName) idCardProfileName.textContent = profName;
+      if (idCardStudentId) idCardStudentId.textContent = sid;
+
+      // Valid thru: end of next academic year (rough approximation)
+      const now = new Date();
+      const year = now.getMonth() >= 6 ? now.getFullYear() + 1 : now.getFullYear();
+      if (idCardValidThru) {
+        idCardValidThru.textContent = "06/30/" + (year + 1);
+      }
+
+      // Barcode-ish string based on ID
+      if (idCardBarcode) {
+        const base = sid.replace(/[^0-9]/g, "");
+        let pattern = "";
+        for (let i = 0; i < base.length; i++) {
+          const n = parseInt(base[i], 10);
+          pattern += (n % 2 === 0 ? "|" : "||");
+          pattern += " ";
+        }
+        idCardBarcode.textContent = pattern.trim() || "|| ||| | |||| |";
+      }
+
+      // Logo
+      const initials = computeInitialsFromName(school);
+      if (idCardLogoInitials) idCardLogoInitials.textContent = initials;
+      if (appState.logoUrl && idCardLogoImage) {
+        idCardLogoImage.src = appState.logoUrl;
+        idCardLogoImage.classList.remove("hidden");
+        idCardLogoInitials.classList.add("hidden");
+      } else if (idCardLogoImage && idCardLogoInitials) {
+        idCardLogoImage.classList.add("hidden");
+        idCardLogoInitials.classList.remove("hidden");
+      }
+
+      // Avatar
+      const profInitials = computeProfileInitials();
+      if (idCardAvatarInitials) idCardAvatarInitials.textContent = profInitials;
+      if (appState.profileAvatarUrl && idCardAvatarImage) {
+        idCardAvatarImage.src = appState.profileAvatarUrl;
+        idCardAvatarImage.classList.remove("hidden");
+        idCardAvatarInitials.classList.add("hidden");
+      } else if (idCardAvatarImage && idCardAvatarInitials) {
+        idCardAvatarImage.classList.add("hidden");
+        idCardAvatarInitials.classList.remove("hidden");
+      }
+    }
+
+    idCardBtn.addEventListener("click", () => {
+      updateIdCard();
+      idCardOverlay.classList.add("active");
+    });
+
+    function closeIdCard() {
+      idCardOverlay.classList.remove("active");
+    }
+
+    closeIdCardBtn.addEventListener("click", closeIdCard);
+    idCardOverlay.addEventListener("click", (e) => {
+      if (e.target === idCardOverlay) {
+        closeIdCard();
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && idCardOverlay.classList.contains("active")) {
+        closeIdCard();
+      }
+    });
 
     function applyStateToUI() {
       schoolNameDisplay.textContent = appState.schoolName;
@@ -1915,11 +2261,11 @@
       applyOfficialView();
 
       applyBrandingToLogin();
+      updateIdCard();
     }
 
-    // If you want auto-login after refresh when email already set, uncomment:
+    // Uncomment to auto-login if you have saved email:
     // if (appState.email) { isLoggedIn = true; enterDashboard(); }
-
   </script>
 </body>
 </html>
